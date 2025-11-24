@@ -16,7 +16,7 @@ This project is part of a larger effort to build an intelligent decision-support
 
 Platform is live on Streamlit!
 
-[Visit The app on Streamlit](https://biomat-clean-dp4kc46azxnzdlx9n9x3af.streamlit.app/)
+[Visit The app on Streamlit](https://biomat-test-inuxwupzxu4apppplsy93ya2.streamlit.app/)
 
 ---
 
