@@ -1,0 +1,14 @@
+{
+    "model_name": "polymer_tg_predictor_v1",
+    "date_trained": "2025-11-09 15:11:22",
+    "num_samples": 7260,
+    "num_features": 2048,
+    "test_loss": 0.20232141017913818,
+    "test_mae_scaled": 0.2759205102920532,
+    "paths": {
+        "model": "/home/dave/biomaterial-selection/models/polymer_tg_predictor_v1.keras",
+        "scaler_mean": "/home/dave/biomaterial-selection/models/polymer_tg_scaler_mean_v1.npy",
+        "scaler_scale": "/home/dave/biomaterial-selection/models/polymer_tg_scaler_scale_v1.npy",
+        "dataset": "/home/dave/biomaterial-selection/master_data/polymer_tg/polymer_tg_dataset_v1.csv"
+    }
+}

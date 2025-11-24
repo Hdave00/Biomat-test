@@ -1,0 +1,23 @@
+{
+  "crystalline_model": {
+    "model": "crystal_structure_model.pkl",
+    "scaler": "crystal_scaler.pkl",
+    "label_encoder": "crystal_label_encoder.pkl",
+    "meta": "crystal_model_metrics.json"
+  },
+  "polymer_tg_model": {
+    "model": "polymer_tg_density_predictor_v2.keras",
+    "scaler_mean": "polymer_tg_density_scaler_mean_v2.npy",
+    "scaler_scale": "polymer_tg_density_scaler_scale_v2.npy"
+  },
+  "qsar_models": {
+    "classifier": "qsar_classifier_rf.pkl",
+    "regressor": "qsar_regressor_rf.pkl",
+    "scaler": "qsar_scaler.pkl",
+    "features": "qsar_feature_list.json"
+  },
+  "youngs_modulus_model": {
+    "model": "youngs_modulus_model.pkl",
+    "features": "youngs_modulus_features.json"
+  }
+}

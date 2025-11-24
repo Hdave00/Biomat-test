@@ -1,0 +1,69 @@
+Polymer,Polymer_Class,SMILES,Tg_C,Density_g_cm3,Rigidity_Class
+Unknown Polymer,Polysiloxanes/silanes,,-139.0,,Flexible
+poly(vinyl acetate),"Polyimides/thioimides, Polyoxides/ethers/acetals",*CC(OC(=O)C)*,29.850000000000023,1.19,Semi-rigid
+poly(vinyl chloride),"Polyoxides/ethers/acetals, Polysulfones/sulfoxides/sufonates/sulfoamides",*C([Cl])C*,37.85000000000002,1.3,Semi-rigid
+poly(behenyl acrylate),"Polyoxides/ethers/acetals, Polysulfones/sulfoxides/sufonates/sulfoamides",*C(C(=O)OCCCCCCCCCCCCCCCCCCCCCC)C*,37.85000000000002,0.9752,Semi-rigid
+"poly(4-methyl-2-methylene-1,3-dioxolane)","Polyoxides/ethers/acetals, Polyimines",*CC1(OC(C)CO1)*,47.85000000000002,1.264,Semi-rigid
+poly(benzyl methacrylate),"Polyesters/thioesters, Polyamides/thioamides",*C(C)(C(=O)OCc1ccccc1)C*,53.85000000000002,1.179,Semi-rigid
+poly(ethyl methacrylate),"Polyoxides/ethers/acetals, Polyimines",*C(C)(C(=O)OCC)C*,60.85000000000002,1.12,Semi-rigid
+poly(vinyl benzoate),Polyimides/thioimides,*CC(OC(=O)c1ccccc1)*,61.85000000000002,1.214,Semi-rigid
+poly(ethylene furanoate),"Polyimides/thioimides, Polyoxides/ethers/acetals",*CCOC(=O)c1ccc(o1)C(=O)O*,82.85000000000002,1.4299,Semi-rigid
+polystyrene,"Polyoxides/ethers/acetals, Polyamides/thioamides, Polyimines",*CC(c1ccccc1)*,83.85000000000002,1.0,Semi-rigid
+poly(methyl methacrylate),,*C(C)(C(=O)OC)C*,101.85000000000002,1.163,Rigid
+poly(2-vinylpyridine),Polyimides/thioimides,*CC(c1ccccn1)*,103.85000000000002,1.156,Rigid
+poly(p-methoxystyrene),"Polyamides/thioamides, Polysiloxanes/silanes",*CC(c1ccc(cc1)OC)*,104.85000000000002,1.118,Rigid
+poly(acrylic acid),Polyimides/thioimides,*CC(C(=O)O)*,107.85000000000002,1.15,Rigid
+poly(vinyltrimethyl silane),,*CC([Si](C)(C)C)*,119.85000000000002,0.885,Rigid
+poly (2- hydroxyethylmethacrylate),Polyimides/thioimides,*C(C)(C(=O)OCCO)C*,120.85000000000002,1.15,Rigid
+poly(p-acetoxystyrene),"Polyimides/thioimides, Polyoxides/ethers/acetals",*CC(c1ccc(cc1)OC(=O)C)*,125.85000000000002,1.168,Rigid
+poly(2-ethyl-2-adamantylmethacrylate),,*C(C)(C(=O)OC1(CC)C2CC3CC(C2)CC1C3)C*,133.85000000000002,1.129,Rigid
+poly(2-methyl-2- adamantylmethacrylate),,*C(C)(C(=O)OC1(C)C2CC3CC(C2)CC1C3)C*,140.85000000000002,1.134,Rigid
+polydimethylsiloxane,"Polystyrenes, Polyvinyls",*[Si](C)(C)O*,146.0,0.965,Rigid
+poly(4-vinylpyridine),,*CC(c1ccncc1)*,153.85000000000002,1.15,Rigid
+poly (N-vinyl-2-pyrrolidone),"Polyoxides/ethers/acetals, Polyamides/thioamides, Polyimines, Polyketones/thioketones",*C(N1C(=O)CCC1)C*,154.85000000000002,1.16,Rigid
+poly(1-vinylimidazole),,*CC(n1cn(cc1))*,170.85000000000002,,Rigid
+"polysulfone, poly(bisphenol-A sulfone)",,*c1ccc(cc1)C(C)(C)c2ccc(cc2)Oc3ccc(cc3)S(=O)(=O)c4ccc(cc4)O*,179.85000000000002,1.24,Rigid
+"3,3'-dimethylbisphenol-Z polysulfone",,*Oc1ccc(cc1)S(=O)(=O)c1ccc(cc1)Oc2c(C)cc(cc2)C3(CCCCC3)c4cc(C)c(cc4)*,179.85000000000002,1.227,Rigid
+poly[1-phenyl-2-(p-tert-butylphenyl)acetylene,,*C(c1ccc(C(C)(C)C)cc1)=C(c2ccccc2)*,183.85000000000002,1.035,Rigid
+poly(allyl glycidil ether),Other polymers,*CC(COCC=C)O*,194.0,1.08,Rigid
+poly(n-butyl glycidyl ether),Other polymers,*CC(COCCCC)O*,194.0,0.987,Rigid
+"3,3'-dimethyl bisphenol-A (bisphenol-C) polysulfone",,*Oc1ccc(cc1)S(=O)(=O)c1ccc(cc1)Oc2c(C)cc(cc2)C(C)(C)c3cc(C)c(cc3)*,196.85000000000002,1.213,Rigid
+polyisobutylene,,*C(C)(C)C*,197.2,0.913,Rigid
+poly[1-phenyl-2-[p-(trimethylsilyl)phenyl]acetylene],,*C(c1ccc([Si](C)(C)C)cc1)=C(c2ccccc2)*,199.85000000000002,0.91,Rigid
+poly(1-phenyl-1-propyne),,*C(C)=C(c1ccccc1)*,199.85000000000002,1.0,Rigid
+polyisoprene,,*CC=C(C)C*,202.2,0.91,Rigid
+"poly(2,6-dimethyl-1,4-phenylene ether)",,*c1cc(C)c(c(C)c1)O*,203.85000000000002,1.06,Rigid
+"Polyether-imide poly(bisphenol-A-co-4-nitrophthalicanhydride-co-1,3-phenylenediamine)",,*c1ccc(cc1)C(C)(C)c2ccc(cc2)Oc3ccc(c4c3)C(=O)N(C4(=O))c5cccc(c5)N(C(=O)c6cc7)C(=O)c6cc7O*,205.85000000000002,1.27,Rigid
+poly(iso-propyl glycidil ether),"Polyimides/thioimides, Polyoxides/ethers/acetals",*CC(COC(C)C)O*,208.0,0.999,Rigid
+poly(ethyl glycidyl ether),"Polyoxides/ethers/acetals, Polyamides/thioamides",*CC(COCC)O*,209.0,1.046,Rigid
+poly(ethyl vinyl ether),"Polyoxides/ethers/acetals, Polyimines",*CC(OCC)*,213.0,0.959,Rigid
+poly(p-vinylbenzyltrimethyl ammonium tetrafluoroborate),,*CC(c1ccc(cc1)C[N+](C)(C)C)*.[B-](F)(F)(F)F,214.85000000000002,,Rigid
+"polyethersulfone, poly(oxy-1,4-phenylenesulfonyl-1,4-phenylene)",,*c1ccc(cc1)S(=O)(=O)c2ccc(cc2)O*,219.85000000000002,1.37,Rigid
+"polyphenylenesulfone, biphenol polysulfone",,*Oc1ccc(cc1)S(=O)(=O)c1ccc(cc1)Oc2ccc(cc2)c3ccc(cc3)*,219.85000000000002,1.241,Rigid
+poly(trimethylsilyl)propyne,,*C(C)=C([Si](C)(C)C)*,229.85000000000002,0.74,Rigid
+"3,3',5,5'-tetramethyl bisphenol-A polysulfone",,*Oc1ccc(cc1)S(=O)(=O)c1ccc(cc1)Oc2c(C)cc(cc2(C))C(C)(C)c3cc(C)c(c(C)c3)*,241.85000000000002,1.151,Rigid
+poly(decyl acrylate),"Polyoxides/ethers/acetals, Polyimines",*C(C(=O)OCCCCCCCCCC)C*,243.0,0.986,Rigid
+poly(vinyl methyl ether),"Polyimides/thioimides, Polyoxides/ethers/acetals",*CC(OC)*,245.0,1.05,Rigid
+poly(4-methyl-2-pentyne),,*C(C)=C(C(C)C)*,249.85000000000002,0.78,Rigid
+poly(trimethylgermyl)propyne,,*C(C)=C([Ge](C)(C)C)*,249.85000000000002,1.19,Rigid
+poly(ethyl acrylate),"Polyoxides/ethers/acetals, Polysulfones/sulfoxides/sufonates/sulfoamides",*C(C(=O)OCC)C*,250.0,1.1178,Rigid
+poly(trifluoro styrene),,*C(F)(F)C(c1ccccc1)(F)*,255.85000000000002,1.41,Rigid
+poly(5-ethyltrimethoxysilyl-2-norbornene),,*C1[C@@H]2CC(CC[Si](OC)(OC)OC)[C@@H](C2)C1*,269.85,1.129,Rigid
+poly(n-pentyl methacrylate),"Polyimides/thioimides, Polyoxides/ethers/acetals",*C(C)(C(=O)OCCCCC)C*,276.0,1.03,Rigid
+poly(methyl acrylate),"Polyimides/thioimides, Polyoxides/ethers/acetals, Polyamides/thioamides",*CC(C(=O)OC)*,283.0,1.2,Rigid
+"3,3',5,5'-tetramethyl biphenol polysulfone",,*Oc1ccc(cc1)S(=O)(=O)c1ccc(cc1)Oc2c(C)cc(cc2(C))c3cc(C)c(c(C)c3)*,287.85,1.195,Rigid
+poly(butyl methacrylate),,*C(C)(C(=O)OCCCC)C*,288.2,1.07,Rigid
+poly(2-dimethyl aminoethyl methacrylate),"Polyoxides/ethers/acetals, Polyimines",*CC(C)(C(=O)OCCN(C)C)*,291.0,1.1,Rigid
+"2,2',3,3',5,5'-hexamethyl biphenol polysulfone",,*Oc1ccc(cc1)S(=O)(=O)c1ccc(cc1)Oc2c(C)c(C)c(cc2(C))c3c(C)c(C)c(c(C)c3)*,294.85,1.144,Rigid
+poly(5-tris(2-methoxyethoxy)-2-norbornene),,*C1[C@@H]2CC([Si](OCCOC)(OCCOC)OCCOC)[C@@H](C2)C1*,306.85,1.155,Rigid
+poly(5-tripropoxysilyl-2-norbornene),,*C1[C@@H]2CC([Si](OCCC)(OCCC)OCCC)[C@@H](C2)C1*,317.85,1.04,Rigid
+poly(5-methyltrimethoxysilyl-2-norbornene),,*C1[C@@H]2CC(C[Si](OC)(OC)OC)[C@@H](C2)C1*,318.85,1.159,Rigid
+"5(6)-amino-1-(4'-aminophenyl)-1,3,-trimethylindane",,*c1ccc2c(c1)C(C)(CC2(C)C)c1ccc(cc1)N3C(=O)c4ccc(cc4C3=O)C(=O)c5ccc(C6=O)c(c5)C(=O)N6*,319.85,1.238,Rigid
+poly(5-triethoxysilyl-2-norbornene),,*C1[C@@H]2CC([Si](OCC)(OCC)OCC)[C@@H](C2)C1*,324.85,1.088,Rigid
+"poly(3,3-bis(trimethylsilyl)tricyclononene-7)",,*C1C2C3C([Si](C)(C)C)([Si](C)(C)C)CC3C(C2)C1*,339.85,0.853,Rigid
+poly(5-triisopropoxysilyl-2-norbornene),,*C1[C@@H]2CC([Si](OC(C)C)(OC(C)C)OC(C)C)[C@@H](C2)C1*,343.85,0.98,Rigid
+poly(trimethyl silyl norbornene),,*C1[C@@H]2CC([Si](C)(C)C)[C@@H](C2)C1*,346.85,0.883,Rigid
+poly(norbornene),,*C1C(C2)CCC2C1*,346.85,1.025,Rigid
+poly(5-trimethoxysilyl-2-norbornene),,*C1[C@@H]2CC([Si](OC)(OC)OC)[C@@H](C2)C1*,364.85,1.111,Rigid
+6FDA-DAM,,*N1C(=O)c2ccc(cc2C1=O)C(C(F)(F)F)(C(F)(F)F)c3ccc(C4=O)c(c3)C(=O)N4c5c(C)c(c(C)cc5(C))*,375.85,1.34,Rigid
+"poly(2,2'-(m-phenylene)-5,5'-bibenzimidazole)",,*c1cccc(c1)c2nc3ccc(cc3[nH]2)c4ccc5[nH]c(nc5c4)*,426.85,1.25,Rigid

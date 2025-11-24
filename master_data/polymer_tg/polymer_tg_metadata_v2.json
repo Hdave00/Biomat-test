@@ -1,0 +1,14 @@
+{
+    "model_name": "polymer_tg_density_predictor_v2",
+    "date_trained": "2025-11-09 01:36:08",
+    "num_samples": 7478,
+    "num_features": 2048,
+    "test_loss": 0.4055778384208679,
+    "test_mae_scaled": 0.21820029616355896,
+    "paths": {
+        "model": "/home/dave/biomaterial-selection/models/polymer_tg_density_predictor_v2.keras",
+        "scaler_mean": "/home/dave/biomaterial-selection/models/polymer_tg_density_scaler_mean_v2.npy",
+        "scaler_scale": "/home/dave/biomaterial-selection/models/polymer_tg_density_scaler_scale_v2.npy",
+        "dataset": "/home/dave/biomaterial-selection/master_data/polymer_tg/polymer_tg_dataset_v2.csv"
+    }
+}

@@ -1,0 +1,17 @@
+biol/
+app/__pycache__
+planning.md
+.env
+zipfiles/
+api/
+future-expansion-data/
+prepare_training_data.log
+archived_scripts
+src/ml_pipelines/deprecated_pipelines
+master_data/biological/deprecated_data
+master_data/chemical/deprecated_data
+debug_oligomer_model.py
+templates/
+src/ml_pipelines/protein_ligand_binding_predictor.py
+src/features/
+src/master_index.py
