@@ -257,7 +257,7 @@ def extract_cif_text(structure) -> Optional[str]:
 
 def safe_table(data_dict, title=None):
 
-    """Render a clean table that hides N/A, None, and empty columns."""
+    """ Render a clean table that hides N/A, None, and empty columns. """
 
     if not isinstance(data_dict, dict) or not data_dict:
         st.caption(f"No {title or 'valid'} data available.")
@@ -283,13 +283,15 @@ def show_mp_card(mp_json: dict):
     """
     Display a Materials Project card in Streamlit with summary, elasticity,
     structure, thermo, bonding, magnetism, oxidation states, and robocrystallographer info.
-    Cleanly skips empty data and avoids raw CIF dumps.
+    Cleanly skip empty data and avoids raw CIF dumps.
     """
 
+    # to avoid any errors and potential unbounded query loop, first check if there even is a json for the selected element.
     if not mp_json:
         st.info("No Materials Project data available.")
         return
 
+    # show the result card but injecting html, and show it as a streamlit column
     st.markdown("<div class='result-card'>", unsafe_allow_html=True)
     left_col, right_col = st.columns([2, 3])
 
@@ -302,13 +304,16 @@ def show_mp_card(mp_json: dict):
         if summary:
             st.write(summary)
 
-        # Clean metrics (skip None)
+        # Clean metrics, skip all null or None values from populating the table
         metrics = {
             "Density (g/cm³)": mp_json.get("density"),
             "Band gap (eV)": mp_json.get("band_gap"),
             "Energy above hull (eV/atom)": mp_json.get("e_above_hull"),
         }
+
+        # use dict iteration to cleanly show or omit items in the json that are null or None
         nonempty_metrics = {k: v for k, v in metrics.items() if v is not None}
+
         if nonempty_metrics:
             cols = st.columns(len(nonempty_metrics))
             for (label, val), c in zip(nonempty_metrics.items(), cols):
@@ -316,7 +321,7 @@ def show_mp_card(mp_json: dict):
         else:
             st.caption("No numeric metrics available.")
 
-        # Chemical system / formula
+        # Chemical system / formula to display the properties as formatted by mp_json, make it pretty
         chemsys = (
             mp_json.get("chemsys")
             or mp_json.get("composition")
@@ -339,7 +344,9 @@ def show_mp_card(mp_json: dict):
         else:
             st.caption("No elasticity data available.")
 
-        # NOTE nested sructures to mimic the data from the api in json format
+        # NOTE nested sructures to mimic the data from the api in json format. We could unpack the json and "pre-parse" the properties but at this proof
+        # of concept stage that is not needed.
+
         # Structure rendering
         structure = mp_json.get("structure") or mp_json.get("cif")
         if structure:
@@ -368,14 +375,21 @@ def show_mp_card(mp_json: dict):
         "Robocrystallographer": mp_json.get("robocrys") or mp_json.get("robocrystallogapher") or mp_json.get("robocryst"),
     }
 
+    # Then for the title and data thereoff in the dict of nested properties, we want to show iterate over them and show each properties' metadata properties
+    # in a table.
     for title, data in nested_docs.items():
 
         # Skip completely empty or None fields
         if not data:
             continue
-
+        
+        # In the expansion tab, show the title, and if its the data requested, show the current materials' cleaned data by calling the safe_iter function
+        # that we defined earlier on the data.
         with st.expander(title, expanded=False):
             if isinstance(data, (dict, list)):
+
+                # set the cleaned data by calling safe_iter on the overall data, if its not cleaned, or not cleanable, then either there is no value for
+                # that field/instance or its not available yet
                 cleaned = [d for d in safe_iter(data) if d]
                 if not cleaned:
                     st.caption("No data available.")
@@ -434,7 +448,7 @@ def render_cytotoxicity(df):
             [""] + name_list + cas_list + cell_list
         )
 
-        # ---- New: Source file selector ----
+        # ---- Source file selector ----
         source_file = st.selectbox(
             "Source File (optional)",
             [""] + source_list
@@ -642,7 +656,7 @@ def flatten_dict(d, parent_key='', sep='.'):
     return dict(items)
 
 
-# ---------- UI NOTE -> this is where it gets really convoluted because of how streamlit renders and queries
+# ---------- UI NOTE -> this is where it gets a bit nested, because of how streamlit renders and queries teh CSV files.
 def run_selection_app():
     st.markdown("<div class='large-title'>Material Selection Module</div>", unsafe_allow_html=True)
     st.write('Find the best materials based on engineering, biological, or chemical requirements.')
@@ -659,7 +673,7 @@ def run_selection_app():
     if tab_choice == 'Local Search':
         st.subheader('Local Material Databases')
 
-        # Here
+        # Here we start with the main radial selection for each domain, within the local search option.
         # Correct indentation, domain radio belongs here
         domain = st.radio(
             "Choose database",
