@@ -12,6 +12,7 @@ Model outputs:
 import os
 import pandas as pd
 import numpy as np
+import re
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.metrics import classification_report, mean_absolute_error
@@ -29,6 +30,8 @@ SCALER_OUT = "models/oligomeric_state_scaler.pkl"
 ENCODER_OUT = "models/oligomeric_state_encoder.pkl"
 
 # === Load and prepare data ===
+# We want to look at the features most relevant to be able to determine the Oligomeric complex of a given protein.
+# The inputs that matter most are the ones we will train the model on, using a "Many-To-One", Feedforward and Fully Connected Neural Network.
 df = pd.read_csv(DATA_PATH)
 print(f"Loaded dataset: {df.shape[0]} rows")
 

@@ -219,7 +219,7 @@ def train_qsar_models(
     # Optional: scale descriptors (FPs are binary; scaling more important for descriptors)
     scaler = StandardScaler()
 
-    # We'll scale descriptor + categorical part but keep bits as-is: concat scaled descriptors
+    # scale descriptor + categorical part but keep bits as-is: concatonate scaled descriptors
     if descriptor_cols + categorical_encoded:
         non_fp = X[descriptor_cols + categorical_encoded]
         scaled_non_fp = scaler.fit_transform(non_fp)
@@ -285,6 +285,7 @@ def predict_from_smiles(smiles, threshold_mM=TOXICITY_THRESHOLD_MM):
     """Given a SMILES string, return predicted log_CC50 (regression) and toxicity probability."""
 
     reg, clf, scaler, feature_cols = _load_qsar_artifacts()
+    
     # compute fingerprint and descriptors
     fp = safe_smiles_to_fingerprint(smiles, N_BITS).reshape(1, -1)
     s = str(smiles).strip().split(';')[0].split('.')[0]

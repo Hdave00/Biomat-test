@@ -1,3 +1,6 @@
+# NOTE --- This script is depricated, because the idea of a unified biocompatibility dataset with labelled values for machine learing is too vague!
+# As a resultm it does not, yet, have a basis in reality to even remotely calculate "bio-compatibility" in a reliable manner.
+
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from pathlib import Path
