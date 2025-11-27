@@ -3,18 +3,19 @@
 Streamlit UI for Material Selection + Materials Project integration.
 
 Features implemented:
-- Local-only search for Structural / Mechanical (as before) with optional free-text and optional pick-from-list
-- Automatic fallback to Materials Project when local search returns no results *if* user enables fallback
-- A separate "Materials Project Explorer" tab that provides a periodic-element grid, quick element-based searches
+- Local-only search for Mechanical, Cytotoxicity, Polymer Tg & Density, High Entropy Alloys and Corrosion data (as before) with optional 
+    free-text and optional pick-from-list.
+- Automatic fallback to Materials Project when local search returns no results *if* user enables fallback.
+- A separate "Materials Project Explorer" tab that provides a periodic-element grid, quick element-based searches.
   and an advanced filter form that maps directly to mp_api's documented search() parameters.
 - Material detail view shows summary fields, elasticity/thermo/bonds/etc (if available via mp_integration.query_materials_project)
   and attempts a py3Dmol rendering when a structure is present; otherwise falls back to showing CIF/text.
 
 Notes:
 - This file expects `app/mp_integration.py` to expose three functions:
-    * query_materials_project(query: str | material_id) -> dict | None
+    * cached_query_materials_project(query: str | material_id) -> dict | None
     * get_mp_property_dataframe(mp_json: dict) -> pandas.DataFrame
-    * query_mp_advanced_filters(...) -> list[dict] | None
+    * cached_query_mp_advanced_filters(...) -> list[dict] | None
   The advanced filter function should accept only *official* mp_api search() kwargs (e.g. elements, formula, band_gap, density, energy_above_hull, is_stable, etc.)
 - MP API key should be loaded inside mp_integration (from .env). The UI does NOT ask the user for an API key.
 
@@ -52,7 +53,7 @@ def load_dataset(path):
         return None
 
 
-# Minimal CSS tweaks
+# Minimal CSS
 st.markdown(
     """
     <style>
