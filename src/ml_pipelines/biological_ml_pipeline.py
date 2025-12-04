@@ -12,6 +12,10 @@ QSAR pipeline for ionic-liquid cytotoxicity (from multiple CSVs).
     - models/qsar_scaler.pkl   (if scaling used)
     - models/qsar_feature_list.json
     - master_data/biological/biological_qsar_ml_ready.csv
+
+    NOTE --- This dataset is a unification of a lot of other CSV files and datasets, not only for the use of Machine Learning prediction/regression but also
+                a database than can be used for lookup, in one place like a general dataset.
+
 """
 
 from pathlib import Path
@@ -25,7 +29,7 @@ import glob
 import re
 
 from rdkit import Chem
-from rdkit.Chem import AllChem, Descriptors
+from rdkit.Chem import AllChem, Descriptors, rdFingerprintGenerator, DataStructs
 
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler
@@ -56,19 +60,46 @@ TOXICITY_THRESHOLD_MM = 1.0  # default threshold for toxic_label (adjustable)
 
 
 # Helpers: SMILES -> fingerprint
-def safe_smiles_to_fingerprint(smiles, n_bits=N_BITS):
+# we want to have the function take SMILES as input and an "N_BITS" length of fingerprint
+def safe_smiles_to_fingerprint(smiles, n_bits=N_BITS, radius=2):
 
     """Return numpy array of n_bits for SMILES. Handles salts/malformed."""
+
+    # return an empty array if the input is empty or not a str
+    # This prevents RDKit from attempting to parse non-string types or blank values, which would otherwise raise parsing warnings or fail silently
     if not isinstance(smiles, str) or not smiles.strip():
         return np.zeros(n_bits, dtype=int)
-    s = smiles.strip().split(';')[0].split('.')[0]  # take first component
+    
+    # strip and split the SMILES for formatting 
+    # Chem.MolFromSmiles(s) parses the SMILES and returns an rdkit.Chem.rdchem.Mol object on success, or None if parsing fails. This parses the SMILES
+    # Here we take only the first fragment before semi-colons or dots, which removes salts ("CCO.Cl" -> "CCO") and multi-entry formats ("CCO; note" -> "CCO")
+    s = smiles.strip().split(';')[0].split('.')[0]
+
+    # put MolFromSmiles method in a try-except block because it may return None instead of raising anything
+    # RDKit commonly returns None for invalid SMILES while printing parser warnings
     try:
         mol = Chem.MolFromSmiles(s)
+
+        # If RDKit cannot parse the SMILES, MolFromSmiles returns None, we convert this case to a zero-vector fingerprint so downstream ML stays consistent
         if mol is None:
             return np.zeros(n_bits, dtype=int)
-        fp = AllChem.GetMorganFingerprintAsBitVect(mol, 2, nBits=n_bits)
-        return np.array(fp, dtype=int)
-    except Exception:
+        
+        # The Morgan generator is the modern RDKit API for ECFP-style fingerprints.
+        # radius=2 produces ECFP4-like circular neighborhoods.
+        # fpSize=n_bits ensures the fingerprint length matches the ML model expectations.
+        gen = rdFingerprintGenerator.GetMorganGenerator(radius=radius, fpSize=n_bits)
+
+        fp = gen.GetFingerprint(mol)  # returns an ExplicitBitVect (bit vector)
+        # ExplicitBitVect uses efficient bit storage internally but must be converted, into a numpy array for ML uses, like below
+
+        arr = np.zeros((n_bits,), dtype=int)
+
+        # DataStructs.ConvertToNumpyArray fills an existing numpy array in-place, with the bitvector contents.
+        DataStructs.ConvertToNumpyArray(fp, arr)   # explicit and reliable conversion
+        return arr
+
+    except Exception as e:
+        LOG.warning(f"Failed to convert SMILES '{smiles}': {e}")
         return np.zeros(n_bits, dtype=int)
 
 
@@ -81,8 +112,10 @@ def extract_float(value):
             return np.nan
         s = str(value).strip()
         s = s.replace(",", ".")
+
         # remove any parentheses or text after space
         s = s.split()[0]
+
         # handle ranges like "1-2" -> take mean
         if "-" in s:
             parts = [float(p) for p in s.split("-") if p.replace(".","",1).isdigit()]
@@ -92,7 +125,9 @@ def extract_float(value):
         return np.nan
 
 
-# Main data building
+# Main data building, here we want to pass as args to the function, the global variables, that are mainly the Input and Output of the function.
+# Mainly, we want to pass all of the CSV files of ionic liquids, the cell_lines file and the methods file. The last two csv files are only used for verifying
+# the right data is present, and nothing "made up" or incorrect is in the final merged csv file.
 def build_qsar_dataset(
     input_dir=INPUT_DIR,
     cell_lines_path=CELL_LINES_CSV,
@@ -101,13 +136,18 @@ def build_qsar_dataset(
     n_bits=N_BITS,
     threshold_mM=TOXICITY_THRESHOLD_MM
 ):
+    
     """Load CSVs, create fingerprint columns, descriptors, and targets."""
+
+    # set an input directory first for checking via list iteration, if the assigned cell lines and method used is indeed correct. Exclude verification tables
+    # handle all the ionic liquid CSVs, log and exti of no files found or error
     input_dir = Path(input_dir)
     files = sorted([p for p in input_dir.glob("*.csv") if p.name not in ["cell_lines.csv", "methods.csv"]])
     if not files:
         LOG.error(f"No CSVs found in {input_dir}")
         return None
 
+    # Then make a list, to which we will append the dataframes of the CSV files we read. Also add error checking
     dfs = []
     for f in files:
         try:
@@ -117,48 +157,68 @@ def build_qsar_dataset(
         except Exception as e:
             LOG.warning(f"Failed to read {f}: {e}")
 
+    # Then concatonate the data from each CSV files, based on a parent row/header and log that as well
     data = pd.concat(dfs, ignore_index=True)
     LOG.info("Loaded %d rows from %d files", len(data), len(dfs))
 
-    # Standardize some columns to expected names (if present)
+    # Standardize some columns to expected names (if present), we need to do this because some files may have different cased characters and we want to
+    # normalize the data in those columns, into a unified column that can be fed to the model for training.
     if "Mw, g*mol-1" in data.columns:
         data["Mw"] = data["Mw, g*mol-1"].apply(extract_float)
+
     if "CC50/IC50/EC50, mM" in data.columns:
         data["CC50_mM"] = data["CC50/IC50/EC50, mM"].apply(extract_float)
+
     if "Incubation time, h" in data.columns:
         data["Incubation_h"] = data["Incubation time, h"].apply(extract_float)
 
-    # Drop entries without SMILES or target CC50
+    # Drop entries without SMILES or target CC50, Canonical SMILES is unified ie, its the same string used in all CSV files as the column header
     if "Canonical SMILES" not in data.columns:
         LOG.error("No 'Canonical SMILES' column found in input files")
         return None
 
+    # Fingerprinting CAN NOT exist without SMILES, drop missing CC50 values
     data = data.dropna(subset=["Canonical SMILES", "CC50_mM"]).reset_index(drop=True)
     LOG.info("After dropping missing SMILES/CC50: %d rows", len(data))
 
-    # Merge cell lines and method metadata if available
+    # Merge cell lines and method metadata if available, to fill in the respective columns. Use "left join" as to not delete any experimental data
     try:
         if Path(cell_lines_path).exists():
             cl = pd.read_csv(cell_lines_path)
+
+            # Only add metadata, dont overwrite
             data = data.merge(cl, left_on="Cell line", right_on="Cell name", how="left")
+
         if Path(methods_path).exists():
             md = pd.read_csv(methods_path)
             data = data.merge(md, left_on="Method", right_on="Method abbreviation", how="left")
+
     except Exception as e:
         LOG.warning("Could not merge metadata: %s", e)
 
+
     # Fingerprints (vectorized)
     LOG.info("Generating %d-bit Morgan fingerprints", n_bits)
+    
+    # We ideally want to store the canonical SMILE data, as the finger print vectors, by passing in the safe_smiles_to_fingers prints function on the 
+    # numpy array we get, which will be the SMILES column, then generate the fingerprints,that were vectorised by pandas.
+    # NOTE --- Output will be (n_samples, n_bits) matrix
     fps = np.vstack(data["Canonical SMILES"].apply(lambda s: safe_smiles_to_fingerprint(s, n_bits)))
     fp_columns = [f"{FP_PREFIX}{i}" for i in range(fps.shape[1])]
     fps_df = pd.DataFrame(fps, columns=fp_columns)
-    data = pd.concat([data.reset_index(drop=True), fps_df.reset_index(drop=True)], axis=1)
+    data = pd.concat([data.reset_index(drop=True), fps_df.reset_index(drop=True)], axis=1)  # reset_index will align correctly, check method docstring
 
-    # Calculate simple descriptors
+    # Calculate simple descriptors using RDkit, mainly:
+        # Molecular weight -> MolWt
+        # Lipophilicity of the protein
+        # Polar surface area
+    # We want to set them as empty lists, then populate their values, as seen in the canonical SMILES for each, and append. For failed parsing, append nan.
     molwts, logps, tpsas = [], [], []
+
     for s in data["Canonical SMILES"]:
         s_small = s.strip().split(';')[0].split('.')[0]
         mol = Chem.MolFromSmiles(s_small)
+
         if mol:
             molwts.append(Descriptors.MolWt(mol))
             logps.append(Descriptors.MolLogP(mol))
@@ -167,15 +227,20 @@ def build_qsar_dataset(
             molwts.append(np.nan)
             logps.append(np.nan)
             tpsas.append(np.nan)
+
     data["MolWt_calc"] = molwts
     data["LogP_calc"] = logps
     data["TPSA_calc"] = tpsas
 
-    # Create QSAR targets
+    # Create QSAR targets, use log transformation, to improve regression consistency and stability
+    # Toxicity label is based on the threshold calculated by the predicted CC50_mM
     data["log_CC50"] = np.log10(data["CC50_mM"].astype(float))
+
+    # NOTE- we are using Binary classification for the boolean output basically, its NOT a weighted spectrum, that is too complicated.
     data["toxic_label"] = data["CC50_mM"].apply(lambda x: 1 if x < threshold_mM else 0)
 
-    # Encode a few useful categorical vars (Family, Cell type, Organism, Full name of method)
+    # Encode a few useful categorical vars like: Family, Cell type, Organism, Full name of method
+    # For each columns, apply pandas "factorise" to produce contiguous integer encodings, BUT leave ORIGINAL LABELS ALONE! 
     for col in ["Family", "Cell type", "Organism", "Full name of method"]:
         if col in data.columns:
             try:
@@ -202,7 +267,7 @@ def train_qsar_models(
     random_state=42,
 ):
     
-    """Train RF regression & classification models on fingerprint features (plus descriptors)."""
+    """ Train RF regression & classification models on fingerprint features (plus descriptors). """
 
     # feature selection: all fp_* and descriptors
     fp_cols = [c for c in ml_ready_df.columns if c.startswith(fingerprint_prefix)]

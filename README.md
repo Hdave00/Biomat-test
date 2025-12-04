@@ -20,9 +20,28 @@ Platform is live on Streamlit!
 
 ---
 
-# Datasets and citation
+## Datasets and citation
 
 ...
+
+---
+
+---
+## Machine Learning Architecture, libraries and methodology of predictions.
+
+Explanation of why I chose the architecture, prediction methodology and the reasoning behind each machine learning pipeline.
+
+### Main in use machine learning pipelines under src/ml_pipelines:
+
+#### QSAR Pipeline for Ionic-Liquid Cytotoxicity
+
+This module implements a fully automated **Quantitative Structure–Activity Relationship (QSAR)** pipeline for predicting the cytotoxicity of ionic liquids using multiple curated CSV datasets. It supports both **regression (CC50 prediction)** and **binary toxicity classification**, and produces all required molecular fingerprints, physicochemical descriptors, metadata encodings, and trained machine-learning artifacts.
+
+---
+
+**1 Architectural Overview**
+
+
 
 ---
 
