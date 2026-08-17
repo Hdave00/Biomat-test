@@ -409,9 +409,8 @@ def show_mp_card(mp_json: dict):
     st.markdown("</div>", unsafe_allow_html=True)
 
 
-# -----------------------------
-# DOMAIN DATASET LOADER HELPERS
-# -----------------------------
+
+# DOMAIN DATASET LOADER HELPERS -----------------------------
 
 def load_cytotoxicity():
     return load_dataset("master_data/chemical_toxicity_measurements.csv")
@@ -429,9 +428,8 @@ def load_rcsb_pdb_dataset():
     return load_dataset("master_data/rcsb_pdb/RCSB_PDB_Macromolecular_Structure_Dataset_with_Structural_Features.csv")
 
 
-# -----------------------------
-# DOMAIN SEARCH RENDERING
-# -----------------------------
+
+# DOMAIN SEARCH RENDERING -----------------------------
 
 def render_cytotoxicity(df):
     st.subheader("Cytotoxicity Database Search")
@@ -439,26 +437,26 @@ def render_cytotoxicity(df):
     col1, col2 = st.columns([2,1])
 
     with col1:
-        # ---- Auto-suggestion lists ----
+        # Auto-suggestion lists 
         name_list   = sorted(df["Name"].dropna().unique().tolist())
         cas_list    = sorted(df["CAS"].dropna().astype(str).unique().tolist())
         cell_list   = sorted(df["Cell_line"].dropna().unique().tolist())
         source_list = sorted(df["source_file"].dropna().unique().tolist()) \
                       if "source_file" in df.columns else []
 
-        # ---- Primary unified suggestion field ----
+        # primary unified suggestion field
         free_text = st.selectbox(
             "Chemical / CAS / Cell line (optional)",
             [""] + name_list + cas_list + cell_list
         )
 
-        # ---- Source file selector ----
+        # Source file selector 
         source_file = st.selectbox(
             "Source File (optional)",
             [""] + source_list
         )
 
-        # ---- Numeric filters ----
+        # Numeric filters
         max_cc50 = st.number_input("Max CC50 (mM)", 0.0, 10000.0, 10.0)
         max_ic50 = st.number_input("Max IC50 (mM)", 0.0, 10000.0, 10.0)
         max_exposure = st.number_input("Max exposure time (hrs)", 0.0, 1000.0, 48.0)
@@ -469,7 +467,7 @@ def render_cytotoxicity(df):
     if do:
         mask = pd.Series([True] * len(df))
 
-        # ---- text matching ----
+        # text matching 
         if free_text:
             mask &= (
                 df["Name"].fillna("").str.contains(free_text, case=False, na=False) |
@@ -477,11 +475,11 @@ def render_cytotoxicity(df):
                 df["Cell_line"].fillna("").str.contains(free_text, case=False, na=False)
             )
 
-        # ---- source file filtering ----
+        # source file filtering
         if source_file:
             mask &= df["source_file"].fillna("").str.contains(source_file, case=False, na=False)
 
-        # ---- numeric filters ----
+        # numeric filters
         mask &= pd.to_numeric(df["CC50_mM"], errors="coerce").fillna(99999) <= max_cc50
         mask &= pd.to_numeric(df.get("IC50_mM"), errors="coerce").fillna(99999) <= max_ic50
         mask &= pd.to_numeric(df.get("Exposure_hr"), errors="coerce").fillna(99999) <= max_exposure
@@ -677,6 +675,17 @@ def run_selection_app():
     # Load local datasets lazily
     local_unified = load_dataset('master_data/unified_material_data.csv')
 
+    # NOTE-- sanitize numeric columns so mixed-type CSVs don't break comparisons
+    if local_unified is not None:
+
+        # For each column, youngs modulus and tensile strength, if the column in the pandas dataframe is a string, make it numeric first!
+        for col in ['Youngs_Modulus_GPa', 'Tensile_Strength_MPa']:
+            if col in local_unified.columns:
+                local_unified[col] = pd.to_numeric(
+                    local_unified[col].astype(str).str.strip().str.replace(r'[^\d.\-eE]', '', regex=True),
+                    errors='coerce'
+                )
+
     # Local Search Section
     if tab_choice == 'Local Search':
         st.subheader('Local Material Databases')
@@ -737,10 +746,11 @@ def run_selection_app():
                             df[df.columns[0]].astype(str).str.contains(term, case=False, na=False)
                         )
 
+                    # here ".notna" is used to echo the same logic earlier to sanitize numeric columns, and chck for NaN so that rows that couldn't be parsed are excluded
                     mask &= (
-                        df['Youngs_Modulus_GPa'] >= min_youngs
+                        df['Youngs_Modulus_GPa'].notna() & (df['Youngs_Modulus_GPa'] >= min_youngs)
                     ) & (
-                        df['Tensile_Strength_MPa'] >= min_tensile
+                        df['Tensile_Strength_MPa'].notna() & (df['Tensile_Strength_MPa'] >= min_tensile)
                     )
 
                     results = df[mask]
